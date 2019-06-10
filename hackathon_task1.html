@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		body{
+			background-color: #a2b9bc
+		}
+
+		form{
+			
+		width: 200px;
+    margin: 0 auto;
+		}
+		
+
+
+		
+
+	</style>
+	
+</head>
+<body>
+	<h1 align="center">Secret ChatBox</h1>>
+	<form >
+	
+	<input    type="text" id="demot"> </input><br><br>
+	<button onclick="encryption()" id="btn1"> Encryption </button>
+	<button onclick="decryption()" id="btn2">Decryption</button><br><br>
+	<input type="text" id="txtresult" ></input>
+	</form>
+	
+	<script type="text/javascript" >
+		function encryption() {
+			var nameField = document.getElementById('demot').value;
+			alert(atob(nameField));
+			document.getElementById("txtresult").value = atob(nameField);;
+			
+			// body...
+		}
+		
+		function decryption() {
+			var nameField = document.getElementById('demot').value;
+			alert(btoa(nameField));
+			document.getElementById("txtresult").value = btoa(nameField);
+			// body...
+		}
+	</script>
+
+
+</body>
+</html>>
