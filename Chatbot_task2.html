@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Chatbot!</title>
+  </head>
+  <body>
+    <div class="container">
+   <div class="row">
+    <div class="col-12">
+   <div id = "convo">
+   </div>
+  </div>
+</div>
+  <div class="row">
+    <div class="col-6">
+      <center><button class="btn btn-secondary" onclick="load()" id="startbutton">Press enter or click here to start!</button></center>
+    </div>
+  </div>
+   <div class="row">
+    <div class="col-6 offset-6 mx-auto my-auto">
+        <input type="text" id = "text" style="display:none;">
+        <button class="btn btn-primary" type="submit" id="submit" onclick="load()" style="display:none;">Send</button>
+    </div>
+   </div>
+</div>
+    <script type="text/javascript">
+      if( 'transactions' in localStorage)
+        var transactions = localStorage.getItem('transactions')
+      else{
+        var transactions = ""
+        localStorage.setItem('transactions','')
+      } 
+      function load(){
+        document.getElementById("startbutton").style.display = "none"
+        document.getElementById("text").style.display = "block"
+        document.getElementById("submit").style.display = "block"
+        if( 'balance' in localStorage)
+        console.log("present")
+        else{
+            console.log("absent")
+            localStorage.setItem('balance',0);
+        }
+        var balance = parseInt(localStorage.getItem('balance'));
+        if( balance == undefined || balance == NaN || balance == null || balance==0){
+        balance = 0
+        localStorage.setItem('balance',0);
+        }
+        console.log("balance->"+balance)
+        var msgs = document.getElementById("text").value.split(' ')
+        var amt = 0
+        var credit = false
+        var debit = false
+        var show = false
+        var flag = false
+        var history = false
+        var newsmg = ""
+        for(let i=0; i<msgs.length; i++){
+          var word = msgs[i]
+          if( word=="add"||word=="credit"||word=="recieved"||word=="got"){          
+            credit = true
+            break;
+          }
+          if(word=="spent"||word=="lost"||word=="lent"||word=="gave"||word=="paid"){
+            debit = true
+            break;
+          }
+          if( word == "show"){
+            show = true
+            break;
+          }
+          if(onlyDigits(word))
+            amt = parseInt(word)
+          }
+        if( debit ){
+            amt = parseInt(msgs[1])
+            if( amt <= balance ){
+              balance=parseInt(balance)-amt
+              transactions+="<br>Spent "+amt
+              localStorage.setItem('transactions', transactions)
+            }
+            else flag = true;
+        }
+        else if( credit){
+          amt = parseInt(msgs[1])
+          balance=parseInt(balance)+amt
+          transactions+="<br>Recieved "+amt
+          localStorage.setItem('transactions',transactions)
+        }
+        if( balance == 0 )
+        newsmg = "Oops !! You have no money in your account."
+       else if( flag )
+        newsmg = "You don't have enough balance in your account"
+        else if( balance < 500 && balance > 0){
+        newsmg = "You have low balance. Only "+ balance + " left !"
+        }
+        else if( balance > 1500 ){
+        newsmg = "Cool! You have an amount of "+ balance
+        }
+        else newsmg = "Your have a balance of "+balance
+        if( show )
+        newsmg = "Your balance is "+balance
+        localStorage.setItem('balance',balance)
+        console.log("Amount "+balance)
+        if ( msgs[1] == "history")
+           newsmg = "<strong>History</strong><br>"+transactions
+        document.getElementById("convo").innerHTML =document.getElementById("convo").innerHTML + 
+        "<div class='row'><div class='col-8 offset-4'><div class='alert alert-warning' role='alert'>"+document.getElementById("text").value+"</div></div>"+"<div class='col-8'><div class='alert alert-info' role='alert'>"+newsmg+"</div></div></div>"
+      }
+      function onlyDigits(s) {
+  for (let i = s.length - 1; i >= 0; i--) {
+    const d = s.charCodeAt(i);
+    if (d < 48 || d > 57) return false
+  }
+  return true
+}
+    </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
